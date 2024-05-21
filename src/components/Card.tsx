@@ -14,7 +14,7 @@ type CardProps = {
 
 export default function Card({ id, name, gender, species, origin, image }: CardProps) {
   return (
-    <Link to={`/${id}`} className="w-1/5 bg-white rounded p-2 min-w-[250px]">
+    <Link to={`/character/${id}`} className="w-1/5 bg-white rounded p-2 min-w-[250px]">
       <div className="w-full flex justify-center p-2">
         <img src={image} alt="Card image" className="rounded" />
       </div>
