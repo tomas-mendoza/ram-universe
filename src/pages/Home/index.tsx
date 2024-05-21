@@ -31,6 +31,7 @@ export default function Home() {
             species={character.gender} 
             origin={character.origin}
             image={character.image}
+            id={character.id}
             key={character.id}
           />
         ))}

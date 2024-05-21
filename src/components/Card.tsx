@@ -1,4 +1,7 @@
+import { Link } from "react-router-dom";
+
 type CardProps = {
+  id: number;
   name: string;
   gender: string;
   species: string;
@@ -9,9 +12,9 @@ type CardProps = {
   image: string;
 }
 
-export default function Card({ name, gender, species, origin, image }: CardProps) {
+export default function Card({ id, name, gender, species, origin, image }: CardProps) {
   return (
-    <div className="w-1/5 bg-white rounded p-2 min-w-[250px]">
+    <Link to={`/${id}`} className="w-1/5 bg-white rounded p-2 min-w-[250px]">
       <div className="w-full flex justify-center p-2">
         <img src={image} alt="Card image" className="rounded" />
       </div>
@@ -23,6 +26,6 @@ export default function Card({ name, gender, species, origin, image }: CardProps
           <p>{ origin.name }</p>
         </div>
       </div>
-    </div>
+    </Link>
   )
 }
