@@ -24,6 +24,6 @@ export default async function getCharacter(id: number) {
     method: 'GET',
     url: `/character/${id}`
   });
-
+  
   return response as AxiosResponse<CharactersResponse>;
 }
