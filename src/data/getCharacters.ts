@@ -23,10 +23,13 @@ type Response = {
   results: CharactersResponse[];
 }
 
-export default async function getCharacters() {
+export default async function getCharacters(page?: number) {
   const response = await api<Response>({
     method: 'GET',
-    url: '/character'
+    url: '/character',
+    params: {
+      page
+    }
   });
 
   return response as AxiosResponse<Response>;

@@ -2,23 +2,38 @@ import Card from "../../components/Card";
 import Header from "../../components/Header";
 import { useState, useEffect } from 'react';
 import getCharacters, { CharactersResponse } from "../../data/getCharacters";
+import Pagination from "../../components/Pagination";
 
 export default function Home() {
   const [characters, setCharacter] = useState([] as CharactersResponse[]);
+  const [page, setPage] = useState(1);
+  const [hasNextPage, setHasNextPage] = useState(false);
+
+  const updatePage = (quantity: number, operator: string) => {
+    if(operator === '+' && hasNextPage) {
+      setPage(page + quantity);
+    }
+    
+    if(operator === '-' && page > 1) {
+      setPage(page - quantity)
+    }
+  }
+
+  const fetchCharacters = async () => {
+    try {
+      setCharacter([]);
+      const response = await getCharacters(page);
+
+      setCharacter(response.data.results);
+      setHasNextPage(response.data.info.next !== null);
+    } catch(err: unknown) {
+      console.error(err);
+    }
+  }
 
   useEffect(() => {
-    const fetchCharacters = async () => {
-      try {
-        const response = await getCharacters();
-  
-        setCharacter(response.data.results);
-      } catch(err: unknown) {
-        console.error(err);
-      }
-    }
-
     fetchCharacters();
-  }, []);
+  }, [page]);
 
   return (
     <>
@@ -36,6 +51,10 @@ export default function Home() {
           />
         ))}
       </main>
+      <Pagination 
+        page={page}
+        updatePage={updatePage}
+      />
     </>
   )
 }
