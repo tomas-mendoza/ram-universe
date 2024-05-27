@@ -6,6 +6,7 @@ export type EpisodeResponse = {
   name: string;
   episode: string;
   air_date: string;
+  characters: string[];
 }
 
 export default async function getEpisode(episodeNumbers: string[], page: number) {
