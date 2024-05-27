@@ -3,7 +3,6 @@ import Header from "../../components/Header";
 import { useEffect, useState } from "react";
 import { EpisodeResponse, getSingleEpisode } from "../../data/getEpisode";
 import { CharactersResponse, getMultipleCharacters } from "../../data/getCharacters";
-import { Divide } from "lucide-react";
 
 export default function EpisodeInfo() {
   const params = useParams();
