@@ -1,6 +1,7 @@
 import { createBrowserRouter } from "react-router-dom";
 import Home from "../pages/Home";
 import CharacterInfo from "../pages/CharacterInfo";
+import EpisodeInfo from "../pages/EpisodeInfo";
 
 const routes = createBrowserRouter([
   {
@@ -10,6 +11,10 @@ const routes = createBrowserRouter([
   {
     path: '/character/:id',
     element: <CharacterInfo />
+  },
+  {
+    path: '/episode/:id',
+    element: <EpisodeInfo />
   }
 ]);
 

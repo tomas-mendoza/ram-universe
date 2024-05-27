@@ -5,6 +5,7 @@ export type EpisodeResponse = {
   id: number;
   name: string;
   episode: string;
+  air_date: string;
 }
 
 export default async function getEpisode(episodeNumbers: string[], page: number) {
@@ -24,4 +25,17 @@ export default async function getEpisode(episodeNumbers: string[], page: number)
   }
 
   return episodes;
+}
+
+export async function getSingleEpisode(id: string) {
+  try {
+    const response = await api<EpisodeResponse>({
+      url: '/episode/' + id,
+      method: 'GET'
+    });
+
+    return response as AxiosResponse<EpisodeResponse>;
+  } catch(err: unknown) {
+    console.error(err);
+  }
 }
