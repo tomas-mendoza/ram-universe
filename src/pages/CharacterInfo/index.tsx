@@ -1,4 +1,4 @@
-import { useParams } from "react-router-dom"
+import { Link, useParams } from "react-router-dom"
 import { useState, useEffect } from 'react';
 import Header from "../../components/Header";
 import getCharacter, { CharactersResponse } from "../../data/getCharacter";
@@ -10,15 +10,29 @@ export default function CharacterInfo() {
   const [character, setCharacter] = useState<CharactersResponse>();
   const [totalPages, setTotalPages] = useState(0);
   const [episodes, setEpisodes] = useState<EpisodeResponse[]>([]);
+  const [episodeNumbers, setEpisodeNumbers] = useState<string[]>([]);
   const [page, setPage] = useState(1);
 
   const updatePage = (quantity: number, operator: string) => {
     if(operator === '+' && page < totalPages) {
-      setPage(page + quantity);
+      totalPages > page && setPage(page + quantity);
+      fetchEpisodes();
     }
     
     if(operator === '-' && page > 1) {
-      setPage(page - quantity)
+      page > 1 && setPage(page - quantity)
+      fetchEpisodes();
+    }
+  }
+
+  const fetchEpisodes = async () => {
+    try {
+      setEpisodes([]);
+      const episodesResponse = await getEpisode(episodeNumbers, page);
+
+      setEpisodes(episodesResponse);
+    } catch(err: unknown) {
+      console.error(err);
     }
   }
 
@@ -37,19 +51,23 @@ export default function CharacterInfo() {
             episodes.push(episode.split('/')[episode.split('/').length - 1]);
           }
 
-          const episodesResponse = await getEpisode(episodes, page);
+          setEpisodeNumbers(episodes);
 
-          setEpisodes(episodesResponse);
+          setTotalPages(Math.floor(episodes.length/15-1));
+
+          await fetchEpisodes();
         }
       } catch(err: unknown) {
         console.error(err);
       }
     }
 
-    if(page === 1) {
-      fetchCharacter();
-    }
-  }, [page]);
+    fetchCharacter();
+  }, [params.id]);
+
+  useEffect(() => {
+    fetchEpisodes();
+  }, [page, episodeNumbers])
 
   return (
     <>
@@ -58,8 +76,8 @@ export default function CharacterInfo() {
         <div className="w-2/3 p-3 bg-white rounded flex flex-col">
          <div className="bg-white rounded flex">
          {
-            character && episodes.length > 0 && (
-              <>
+            character && (
+              <div key={character.id}>
                 <div className="w-[250px] p-2">
                   <img src={character.image} alt="Character image" className="rounded" />
                 </div>
@@ -68,15 +86,17 @@ export default function CharacterInfo() {
                   <p className="text-gray-800">{character.location.name}</p>
                   <p>{character.gender}</p>
                 </div>
-              </>
+              </div>
             )
           }
          </div>
          <div>
             <h3 className="font-bold text-lg">Episodes</h3>
-            {episodes.length > 0 && episodes.map((ep, index) => (
-              <p>{ep.name} - {ep.episode}</p>
-            ))}
+            <div className="flex flex-col">
+              {episodes.length > 0 && episodes.map((ep) => (
+                <Link to={'/episode/' + ep.id} key={ep.id}>{ep.name} - {ep.episode}</Link>
+              ))}
+            </div>
          </div>
         </div>
       </main>
