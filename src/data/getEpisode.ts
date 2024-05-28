@@ -10,22 +10,17 @@ export type EpisodeResponse = {
 }
 
 export default async function getEpisode(episodeNumbers: string[], page: number) {
-  const episodes = [] as EpisodeResponse[];
-
-  for(const episode of episodeNumbers.splice(page === 1 ? 0 : page*10, page*10+5)) {
     try {
+      console.log(page);
       const response = await api<EpisodeResponse>({
-        url: '/episode/' + episode,
+        url: '/episode/' + episodeNumbers.splice((page-1)*10, 10).join(','),
         method: 'GET'
       });
 
-      episodes.push((response as AxiosResponse<EpisodeResponse>).data);
+      return response as AxiosResponse<EpisodeResponse[]>;
     } catch(err: unknown) {
       console.error(err);
     }
-  }
-
-  return episodes;
 }
 
 export async function getSingleEpisode(id: string) {

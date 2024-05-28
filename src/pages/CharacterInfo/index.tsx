@@ -14,14 +14,12 @@ export default function CharacterInfo() {
   const [page, setPage] = useState(1);
 
   const updatePage = (quantity: number, operator: string) => {
-    if(operator === '+' && page < totalPages) {
+    if(operator === '+') {
       totalPages > page && setPage(page + quantity);
-      fetchEpisodes();
     }
     
-    if(operator === '-' && page > 1) {
+    if(operator === '-') {
       page > 1 && setPage(page - quantity)
-      fetchEpisodes();
     }
   }
 
@@ -30,7 +28,9 @@ export default function CharacterInfo() {
       setEpisodes([]);
       const episodesResponse = await getEpisode(episodeNumbers, page);
 
-      setEpisodes(episodesResponse);
+      if(episodesResponse) {
+        setEpisodes(episodesResponse.data);
+      }
     } catch(err: unknown) {
       console.error(err);
     }
@@ -54,8 +54,6 @@ export default function CharacterInfo() {
           setEpisodeNumbers(episodes);
 
           setTotalPages(Math.floor(episodes.length/15-1));
-
-          await fetchEpisodes();
         }
       } catch(err: unknown) {
         console.error(err);
